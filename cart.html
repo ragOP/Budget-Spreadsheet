@@ -6,8 +6,7 @@
     <title>Ultimate Heavy Duty Physique</title>
     <!-- Link to Google Fonts for Roboto -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600&display=swap" rel="stylesheet">
-	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <style>
         body {
             margin: 0;
@@ -564,52 +563,138 @@
             });
         }
     </script>
-     <script>
-        // Get references to inputs and buttons
+    <script>
+        const tabs = document.querySelectorAll('.tab-link');
+        const contents = document.querySelectorAll('.tab-content');
         const fullName = document.getElementById('full-name');
         const phone = document.getElementById('phone');
         const email = document.getElementById('email');
+        const submitButton = document.querySelector('.submit-button');
+        const warningFullName = document.querySelector('.warning-fullname');
+        const warningPhone = document.querySelector('.warning-phone');
+        const warningEmail = document.querySelector('.warning-email');
         const paymentBtn = document.getElementById('payment-btn');
 
-        paymentBtn.addEventListener('click', (e) => {
+        
+    
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                let emailCheck = false;
+                let phoneCheck = false;
+                let fullNameCheck = false;
+                if(fullName.value == ""){
+                    warningFullName.style.display = 'block';
+                    fullName.style.border = '1px solid red';
+                    fullNameCheck = true;
+                }
+                if(email.value == ""){
+                    warningEmail.style.display = 'block';
+                    email.style.border = '1px solid red';
+                    emailCheck = true;
+                }
+                if(phone.value == ""){
+                    warningPhone.style.display = 'block';
+                    phone.style.border = '1px solid red';
+                    phoneCheck = true;
+                }
+                if(emailCheck || phoneCheck || fullNameCheck){
+                    return;
+                }
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.add('hidden'));
+                tab.classList.add('active');
+                const target = document.getElementById(tab.dataset.tab);
+                target.classList.remove('hidden');
+            });
+        });
+
+        tabs.forEach(tab => {
+            submitButton.addEventListener('click', () => {
+                let emailCheck = false;
+                let phoneCheck = false;
+                let fullNameCheck = false;
+                if(fullName.value == ""){
+                    warningFullName.style.display = 'block';
+                    fullName.style.border = '1px solid red';
+                    fullNameCheck = true;
+                }else{
+                    warningFullName.style.display = 'none';
+                    fullName.style.border = '';
+                    fullNameCheck = false;
+                }
+                if(email.value == ""){
+                    warningEmail.style.display = 'block';
+                    email.style.border = '1px solid red';
+                    emailCheck = true;
+                }else{
+                    warningEmail.style.display = 'none';
+                    email.style.border = '';
+                    emailCheck = false;
+                }
+                if(phone.value == ""){
+                    warningPhone.style.display = 'block';
+                    phone.style.border = '1px solid red';
+                    phoneCheck = true;
+                }else{
+                    warningPhone.style.display = 'none';
+                    phone.style.border = '';
+                    phoneCheck = false;
+                }
+                if(emailCheck || phoneCheck || fullNameCheck){
+                    return;
+                }
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.add('hidden'));
+                tab.classList.add('active');
+                const target = document.getElementById(tab.dataset.tab);
+                target.classList.remove('hidden');
+            });
+        });
+
+  
+    </script>
+    <script>
+        document.getElementById("payment-btn").addEventListener("click", function(e) {
             e.preventDefault();
-
-            // Validate inputs
-            if (!fullName.value || !phone.value || !email.value) {
-                alert("Please fill all the details before proceeding!");
-                return;
-            }
-
-            // Create Razorpay options
+    
             const options = {
                 key: "PEQGyBRoNz7FBI", // Replace with your Razorpay API Key
-                amount: 19900, // Amount in paise (₹199.00)
+                amount: 19900, // Amount in smallest currency unit (e.g., ₹199.00 = 19900 paise)
                 currency: "INR",
                 name: "Ultimate Heavy Duty Physique",
                 description: "Heavy Duty Manual + FREE BONUS",
-                image: "https://heavygain.in/wp-content/uploads/2024/08/Untitled-design-9-300x300.webp", // Logo or product image
-                handler: function (response) {
-                    // Handle successful payment
+                image: "./g1.jpg", // Optional logo
+                handler: function(response) {
+                    // Success Handler: Replace with your logic
                     alert(`Payment successful! Payment ID: ${response.razorpay_payment_id}`);
+                    // Optionally, send the payment ID to your server for verification
                 },
                 prefill: {
-                    name: fullName.value,
-                    email: email.value,
-                    contact: phone.value
+                    name: document.getElementById("full-name").value || "Customer",
+                    email: document.getElementById("email").value || "customer@example.com",
+                    contact: document.getElementById("phone").value || "9999999999",
+                },
+                notes: {
+                    address: "Heavy Duty Physique Headquarters",
                 },
                 theme: {
-                    color: "#000000"
-                }
+                    color: "#000000", // Customize theme color
+                },
             };
-
+    
+            // Validate user input
+            if (!options.prefill.name || !options.prefill.email || !options.prefill.contact) {
+                alert("Please fill in all required fields.");
+                return;
+            }
+    
             // Open Razorpay checkout
             const razorpay = new Razorpay(options);
-            razorpay.open();
-
-            // Prevent default button behavior
-            razorpay.on('payment.failed', function (response) {
-                alert("Payment failed. Please try again.");
+            razorpay.on("payment.failed", function(response) {
+                // Failure Handler
+                alert(`Payment failed! Error: ${response.error.description}`);
             });
+            razorpay.open();
         });
     </script>
 </body>
