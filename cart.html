@@ -641,29 +641,32 @@
  
          // Proceed to Razorpay payment after successful validation
          var options = {
-             "key": "rzp_live_s8kp0CPd9Ncwez", // Your Razorpay key_id
-             "amount": 200, // Amount in paise (10000 = INR 100)
-             "currency": "INR",
-             "name": "Your Company Name",
-             "description": "Test Transaction",
-             "image": "https://your-logo-url.com/logo.png", // Optional: Replace with your logo URL
-             "handler": function (response) {
-                //  alert("Payment successful! Payment ID: " + response.razorpay_payment_id);
-                window.location.href = './success.html';
-                 // You can also handle the payment response here (e.g., save payment info)
-             },
-             "prefill": {
-                 "name": fullName.value,
-                 "email": email.value,
-                 "contact": phone.value
-             },
-             "notes": {
-                 "address": "Test Address"
-             },
-             "theme": {
-                 "color": "#3399cc"
-             }
-         };
+    "key": "rzp_live_s8kp0CPd9Ncwez", // Your Razorpay key_id
+    "amount": 2000, // Amount in paise (10000 = INR 100, 20000 = INR 200)
+    "currency": "INR",
+    "name": "Your Company Name",
+    "description": "Test Transaction",
+    "image": "https://your-logo-url.com/logo.png", // Optional: Replace with your logo URL
+    "handler": function (response) {
+        // Payment successful, redirect to success page
+        window.location.href = './success.html'; // Redirect after successful payment
+    },
+    "prefill": {
+        "name": fullName.value,
+        "email": email.value,
+        "contact": phone.value
+    },
+    "notes": {
+        "address": "Test Address"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+
+var rzp = new Razorpay(options);
+rzp.open();
+
  
          var rzp = new Razorpay(options);
          rzp.open();
