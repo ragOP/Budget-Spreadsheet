@@ -3,54 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Razorpay Payment</title>
+    <title>Create Razorpay Order</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
-    <h2>Buy a Product</h2>
-    <label for="amount">Enter Amount (INR): </label>
-    <input type="number" id="amount" placeholder="Enter amount" required>
-    <button onclick="payNow()">Pay Now</button>
+    <h1>Create Order</h1>
+    <form id="order-form">
+        <label for="amount">Amount (in paise):</label>
+        <input type="number" id="amount" name="amount" required>
+        <br><br>
+        
+        <label for="currency">Currency:</label>
+        <input type="text" id="currency" name="currency" value="INR" required>
+        <br><br>
+        
+        <label for="receipt">Receipt:</label>
+        <input type="text" id="receipt" name="receipt" required>
+        <br><br>
+        
+        <button type="submit">Create Order</button>
+    </form>
 
     <script>
-        async function payNow() {
-            const amount = document.getElementById("amount").value;
-            if (!amount || amount <= 0) {
-                alert("Enter a valid amount");
-                return;
-            }
+        document.getElementById('order-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const amount = document.getElementById('amount').value;
+            const currency = document.getElementById('currency').value;
+            const receipt = document.getElementById('receipt').value;
 
             try {
-                // Step 1: Create an order via backend
-                const response = await fetch("https://phonepe-be.onrender.com/create-order", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ amount: amount })
+                // Call the backend API to create the order
+                const response = await fetch('https://phonepe-be.onrender.com/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ amount, currency, receipt })
                 });
 
-                const order = await response.json();
-                if (!order.id) throw new Error("Failed to create order");
+                const orderData = await response.json();
 
-                // Step 2: Initialize Razorpay Payment
+                if (orderData.error) {
+                    alert("Error creating order: " + orderData.error);
+                    return;
+                }
+
+                // Initialize Razorpay Checkout
                 var options = {
-                    "key": "rzp_live_FcQBR1DILzKVXo", // Replace with your Razorpay Key ID
-                    "amount": order.amount,
-                    "currency": "INR",
-                    "name": "My Store",
-                    "description": "Test Payment",
-                    "order_id": order.id,
-                    "handler": function (response) {
+                    key: 'rzp_live_FcQBR1DILzKVXo',  // Replace with your Razorpay Key ID
+                    amount: orderData.amount,   // Amount in paise
+                    currency: orderData.currency,
+                    order_id: orderData.id,
+                    name: 'Your Company Name',
+                    description: 'Order Payment',
+                    image: 'https://example.com/your-logo.png',
+                    handler: function (response) {
                         alert("Payment Successful! Payment ID: " + response.razorpay_payment_id);
                     },
-                    "theme": { "color": "#3399cc" }
+                    prefill: {
+                        name: 'Customer Name',
+                        email: 'customer@example.com',
+                        contact: '1234567890'
+                    },
+                    notes: {
+                        address: 'Hello World'
+                    }
                 };
 
-                var rzp = new Razorpay(options);
-                rzp.open();
+                const razorpay = new Razorpay(options);
+                razorpay.open();
             } catch (error) {
-                alert("Error: " + error.message);
+                console.error('Error:', error);
+                alert('Failed to create order');
             }
-        }
+        });
     </script>
 </body>
 </html>
