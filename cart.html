@@ -606,122 +606,118 @@
  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
  <script>
-    const tabs = document.querySelectorAll('.tab-link');
-    const contents = document.querySelectorAll('.tab-content');
-    const fullName = document.getElementById('full-name');
-    const phone = document.getElementById('phone');
-    const email = document.getElementById('email');
-    const submitButton = document.querySelector('.submit-button');
-    const warningFullName = document.querySelector('.warning-fullname');
-    const warningPhone = document.querySelector('.warning-phone');
-    const warningEmail = document.querySelector('.warning-email');
-    const paymentBtn = document.getElementById('payment-btn');
+     const tabs = document.querySelectorAll('.tab-link');
+     const contents = document.querySelectorAll('.tab-content');
+     const fullName = document.getElementById('full-name');
+     const phone = document.getElementById('phone');
+     const email = document.getElementById('email');
+     const submitButton = document.querySelector('.submit-button');
+     const warningFullName = document.querySelector('.warning-fullname');
+     const warningPhone = document.querySelector('.warning-phone');
+     const warningEmail = document.querySelector('.warning-email');
+     const paymentBtn = document.getElementById('payment-btn');
+ 
+     tabs.forEach(tab => {
+         tab.addEventListener('click', () => {
+             let emailCheck = false;
+             let phoneCheck = false;
+             let fullNameCheck = false;
+             if(fullName.value == "") {
+                 warningFullName.style.display = 'block';
+                 fullName.style.border = '1px solid red';
+                 fullNameCheck = true;
+             }
+             if(email.value == "") {
+                 warningEmail.style.display = 'block';
+                 email.style.border = '1px solid red';
+                 emailCheck = true;
+             }
+             if(phone.value == "") {
+                 warningPhone.style.display = 'block';
+                 phone.style.border = '1px solid red';
+                 phoneCheck = true;
+             }
+             if(emailCheck || phoneCheck || fullNameCheck) {
+                 return;
+             }
+             tabs.forEach(t => t.classList.remove('active'));
+             contents.forEach(c => c.classList.add('hidden'));
+             tab.classList.add('active');
+             const target = document.getElementById(tab.dataset.tab);
+             target.classList.remove('hidden');
+         });
+     });
+ 
+     submitButton.addEventListener('click', () => {
+         let emailCheck = false;
+         let phoneCheck = false;
+         let fullNameCheck = false;
+         if(fullName.value == "") {
+             warningFullName.style.display = 'block';
+             fullName.style.border = '1px solid red';
+             fullNameCheck = true;
+         } else {
+             warningFullName.style.display = 'none';
+             fullName.style.border = '';
+             fullNameCheck = false;
+         }
+         if(email.value == "") {
+             warningEmail.style.display = 'block';
+             email.style.border = '1px solid red';
+             emailCheck = true;
+         } else {
+             warningEmail.style.display = 'none';
+             email.style.border = '';
+             emailCheck = false;
+         }
+         if(phone.value == "") {
+             warningPhone.style.display = 'block';
+             phone.style.border = '1px solid red';
+             phoneCheck = true;
+         } else {
+             warningPhone.style.display = 'none';
+             phone.style.border = '';
+             phoneCheck = false;
+         }
+         if(emailCheck || phoneCheck || fullNameCheck) {
+             return;
+         }
+ 
+         // Proceed to Razorpay payment after successful validation
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            let emailCheck = false;
-            let phoneCheck = false;
-            let fullNameCheck = false;
-            if(fullName.value == "") {
-                warningFullName.style.display = 'block';
-                fullName.style.border = '1px solid red';
-                fullNameCheck = true;
-            }
-            if(email.value == "") {
-                warningEmail.style.display = 'block';
-                email.style.border = '1px solid red';
-                emailCheck = true;
-            }
-            if(phone.value == "") {
-                warningPhone.style.display = 'block';
-                phone.style.border = '1px solid red';
-                phoneCheck = true;
-            }
-            if(emailCheck || phoneCheck || fullNameCheck) {
-                return;
-            }
-            tabs.forEach(t => t.classList.remove('active'));
-            contents.forEach(c => c.classList.add('hidden'));
-            tab.classList.add('active');
-            const target = document.getElementById(tab.dataset.tab);
-            target.classList.remove('hidden');
-        });
-    });
+        //  PEQGyBRoNz7FBI usernameAsh
+         var options = {
+    "key": "rzp_live_FcQBR1DILzKVXo", // Your Razorpay key_id
+    "amount": 29700, // Amount in paise (10000 = INR 100, 29700 = INR 297)
+    "currency": "INR",
+    "name": "Taskly - Ultimate Task Manager",
+    "description": "Best Planner",
+    "image": "https://api.deepai.org/job-view-file/7bbc5f54-6284-4c7a-9dc0-ed2ef4fd1459/outputs/output.jpg", // Optional: Replace with your logo URL
+    "handler": function (response) {
+        // Payment successful, redirect to success page
+        window.location.href = './success.html'; // Redirect after successful payment
+    },
+    "prefill": {
+        "name": fullName.value,
+        "email": email.value,
+        "contact": phone.value
+    },
+    "notes": {
+        "address": "Test Address"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
 
-    submitButton.addEventListener('click', async () => {
-        let emailCheck = false;
-        let phoneCheck = false;
-        let fullNameCheck = false;
-        if(fullName.value == "") {
-            warningFullName.style.display = 'block';
-            fullName.style.border = '1px solid red';
-            fullNameCheck = true;
-        } else {
-            warningFullName.style.display = 'none';
-            fullName.style.border = '';
-            fullNameCheck = false;
-        }
-        if(email.value == "") {
-            warningEmail.style.display = 'block';
-            email.style.border = '1px solid red';
-            emailCheck = true;
-        } else {
-            warningEmail.style.display = 'none';
-            email.style.border = '';
-            emailCheck = false;
-        }
-        if(phone.value == "") {
-            warningPhone.style.display = 'block';
-            phone.style.border = '1px solid red';
-            phoneCheck = true;
-        } else {
-            warningPhone.style.display = 'none';
-            phone.style.border = '';
-            phoneCheck = false;
-        }
-        if(emailCheck || phoneCheck || fullNameCheck) {
-            return;
-        }
-        try {
-               // Step 1: Create an order on Razorpay
-               const orderResponse = await fetch('https://api.razorpay.com/v1/orders', {
-                   method: 'POST',
-                   headers: {
-                       'Content-Type': 'application/json',
-                       'Authorization': 'Basic ' + btoa('rzp_live_FcQBR1DILzKVXo:rzp_live_FcQBR1DILzKVXo') // Replace with your actual secret key
-                   },
-                   body: JSON.stringify({
-                       amount: 29700, // Amount in paise (INR 297)
-                       currency: "INR",
-                       receipt: "order_" + new Date().getTime(),
-                       payment_capture: 1
-                   })
-               });
+var rzp = new Razorpay(options);
+rzp.open();
 
-               const orderData = await orderResponse.json();
-               if (!orderData.id) throw new Error("Order creation failed");
-
-               // Step 2: Open Razorpay payment modal
-               var options = {
-                   "key": "rzp_live_FcQBR1DILzKVXo", // Your Razorpay key_id
-                   "amount": 29700,
-                   "currency": "INR",
-                   "name": "Taskly - Ultimate Task Manager",
-                   "description": "Best Planner",
-                   "order_id": orderData.id, // Razorpay Order ID
-                   "prefill": { "name": fullName, "email": email, "contact": phone },
-                   "handler": function (response) {
-                       window.location.href = './success.html'; // Redirect on success
-                   },
-                   "theme": { "color": "#3399cc" }
-               };
-
-               var rzp = new Razorpay(options);
-               rzp.open();
-           } catch (error) {
-               alert("Error: " + error.message);
-           }
-       });
-</script>
+ 
+         var rzp = new Razorpay(options);
+         rzp.open();
+     });
+ </script>
+ 
 </body>
 </html>
