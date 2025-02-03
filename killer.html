@@ -3,6 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Website Visit</title>
+</head>
+<body>
+  <h1>Welcome to the Website!</h1>
+  <p>Your visit is being tracked.</p>
+
+  <script>
+    // Function to send the visit to your API
+    function logVisit() {
+      // Get the user's data (you can customize this part)
+      const userData = {
+        websiteId: 'example-website-id', // Set the website ID
+        email: 'user@example.com',       // Example email, replace with actual data
+        phone: '1234567890',             // Example phone, replace with actual data
+      };
+
+      // Sending the data to the API
+      fetch('/conversion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Website visit logged successfully:', data.message);
+        } else {
+          console.error('Error logging visit:', data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Request failed:', error);
+      });
+    }
+
+    // Call logVisit function when the page is loaded
+    window.onload = logVisit;
+  </script>
+</body>
+</html>
+
     <title>Create Razorpay Order</title>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
