@@ -643,11 +643,11 @@
          // Proceed to Razorpay payment after successful validation
          var options = {
     "key": "rzp_live_s8kp0CPd9Ncwez", // Your Razorpay key_id
-    "amount": 200, // Amount in paise (10000 = INR 100, 20000 = INR 200)
+    "amount": 29700, // Amount in paise (10000 = INR 100, 29700 = INR 297)
     "currency": "INR",
-    "name": "Your Company Name",
-    "description": "Test Transaction",
-    "image": "https://your-logo-url.com/logo.png", // Optional: Replace with your logo URL
+    "name": "Taskly - Ultimate Task Manager",
+    "description": "Best Planner",
+    "image": "https://api.deepai.org/job-view-file/7bbc5f54-6284-4c7a-9dc0-ed2ef4fd1459/outputs/output.jpg", // Optional: Replace with your logo URL
     "handler": function (response) {
         // Payment successful, redirect to success page
         window.location.href = './success.html'; // Redirect after successful payment
